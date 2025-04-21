@@ -1,0 +1,53 @@
+{% extends "admin/dashboard.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h4>Edit Product</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-control", rows=4) }}
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        {{ form.price.label(class="form-label") }}
+                        {{ form.price(class="form-control") }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.stock.label(class="form-label") }}
+                        {{ form.stock(class="form-control") }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    {{ form.category.label(class="form-label") }}
+                    {{ form.category(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Product Image</label>
+                    <input type="file" class="form-control" id="image" name="image">
+                    {% if product.image %}
+                    <div class="mt-2">
+                        <small>Current Image:</small>
+                        <img src="{{ url_for('static', filename='images/products/' + product.image) }}" 
+                             class="img-thumbnail mt-2" style="max-height: 100px;">
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{{ url_for('admin.products') }}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-dark">Update Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

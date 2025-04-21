@@ -1,0 +1,101 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+main {
+    flex: 1;
+}
+
+.hero-section {
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+.card {
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,.1);
+}
+
+.product-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.form-control:focus {
+    border-color: #212529;
+    box-shadow: 0 0 0 0.25rem rgba(33, 37, 41, 0.25);
+}
+
+.btn-dark {
+    background-color: #212529;
+    border-color: #212529;
+}
+
+.btn-dark:hover {
+    background-color: #424649;
+    border-color: #424649;
+}
+
+.invalid-feedback {
+    display: block;
+}
+/* Add to app/static/css/style.css */
+.payment-method-option {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.payment-method-option:hover {
+    border-color: #212529;
+}
+
+.payment-method-option.selected {
+    border-color: #212529;
+    background-color: #f8f9fa;
+}
+
+.payment-method-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Payment Options Styling */
+.payment-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-option .card {
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover .card {
+    border-color: #adb5bd;
+}
+
+.payment-option.active .card {
+    border-color: #212529;
+    background-color: #f8f9fa;
+}
+
+/* Form Styling */
+.form-control.rounded-0 {
+    border-radius: 0 !important;
+}
+
+.invalid-feedback {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}

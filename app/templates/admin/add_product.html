@@ -1,0 +1,48 @@
+{% extends "admin/dashboard.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    Add New Product
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows=4) }}
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.price.label(class="form-label") }}
+                                {{ form.price(class="form-control") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.stock.label(class="form-label") }}
+                                {{ form.stock(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            {{ form.category.label(class="form-label") }}
+                            {{ form.category(class="form-select") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.image.label(class="form-label") }}
+                            {{ form.image(class="form-control") }}
+                            <small class="text-muted">Recommended size: 800x800px</small>
+                        </div>
+                        <button type="submit" class="btn btn-dark">Add Product</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

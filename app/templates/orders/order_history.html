@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Order History</h1>
+    
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>KSh {{ "%.2f"|format(order.total_amount) }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if order.status == 'Completed' %}bg-success
+                            {% elif order.status == 'Processing' %}bg-primary
+                            {% elif order.status == 'Cancelled' %}bg-danger
+                            {% else %}bg-secondary{% endif %}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge 
+                            {% if order.payment_status == 'Completed' %}bg-success
+                            {% elif order.payment_status == 'Pending' %}bg-warning text-dark
+                            {% else %}bg-secondary{% endif %}">
+                            {{ order.payment_status }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('orders.order_details', order_id=order.id) }}" class="btn btn-sm btn-outline-dark">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <h3 class="text-muted">You haven't placed any orders yet</h3>
+        <p>Start shopping to place your first order</p>
+        <a href="{{ url_for('products.products') }}" class="btn btn-dark">Shop Now</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

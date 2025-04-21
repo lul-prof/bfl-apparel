@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">Checkout</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="checkoutForm">
+                        {{ form.hidden_tag() }}
+                        
+                        <h5 class="mb-3 border-bottom pb-2">Shipping Information</h5>
+                        <div class="mb-4">
+                            {{ form.shipping_address.label(class="form-label fw-bold") }}
+                            {{ form.shipping_address(class="form-control rounded-0") }}
+                            {% for error in form.shipping_address.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <h5 class="mb-3 border-bottom pb-2">Payment Method</h5>
+                        <div class="mb-4">
+                            <div class="row g-3">
+                                <!-- M-Pesa Option -->
+                                <div class="col-md-6">
+                                    <div class="payment-option {% if form.payment_method.data == 'mpesa' %}active{% endif %}" 
+                                         onclick="selectPayment('mpesa')">
+                                        <input type="radio" 
+                                               id="payment_method-mpesa" 
+                                               name="payment_method" 
+                                               value="mpesa" 
+                                               {% if form.payment_method.data == 'mpesa' %}checked{% endif %}
+                                               class="d-none">
+                                        <label for="payment_method-mpesa" class="w-100 h-100">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="bi bi-phone fs-1 text-success"></i>
+                                                    <h5 class="mt-2">M-Pesa</h5>
+                                                    <p class="small text-muted">Pay via mobile money</p>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <!-- PayPal Option -->
+                                <div class="col-md-6">
+                                    <div class="payment-option {% if form.payment_method.data == 'paypal' %}active{% endif %}" 
+                                         onclick="selectPayment('paypal')">
+                                        <input type="radio" 
+                                               id="payment_method-paypal" 
+                                               name="payment_method" 
+                                               value="paypal" 
+                                               {% if form.payment_method.data == 'paypal' %}checked{% endif %}
+                                               class="d-none">
+                                        <label for="payment_method-paypal" class="w-100 h-100">
+                                            <div class="card h-100">
+                                                <div class="card-body text-center">
+                                                    <i class="bi bi-paypal fs-1 text-primary"></i>
+                                                    <h5 class="mt-2">PayPal</h5>
+                                                    <p class="small text-muted">Pay with card or PayPal</p>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- M-Pesa Phone Field (Conditional) -->
+                            <div id="mpesaFields" class="mt-4 {% if form.payment_method.data != 'mpesa' %}d-none{% endif %}">
+                                <div class="mb-3">
+                                    {{ form.phone.label(class="form-label fw-bold") }}
+                                    {{ form.phone(class="form-control rounded-0") }}
+                                    <small class="text-muted">Format: 2547XXXXXXXX</small>
+                                    {% for error in form.phone.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid mt-4">
+                            {{ form.submit(class="btn btn-dark btn-lg rounded-0 py-3") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for item in cart_items %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <div>
+                                {{ item.product.name }} 
+                                <span class="text-muted">x{{ item.quantity }}</span>
+                            </div>
+                            <div>KSh {{ "%.2f"|format(item.product.price * item.quantity) }}</div>
+                        </li>
+                        {% endfor %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <div>Shipping</div>
+                            <div>KSh 200.00</div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between fw-bold fs-5">
+                            <div>Total</div>
+                            <div>KSh {{ "%.2f"|format(total + 200) }}</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function selectPayment(method) {
+    // Update radio button
+    document.querySelector(`#payment_method-${method}`).checked = true;
+    
+    // Update UI styles
+    document.querySelectorAll('.payment-option').forEach(option => {
+        option.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+    
+    // Toggle M-Pesa fields
+    const mpesaFields = document.getElementById('mpesaFields');
+    if (method === 'mpesa') {
+        mpesaFields.classList.remove('d-none');
+        document.getElementById('{{ form.phone.id }}').setAttribute('required', 'required');
+    } else {
+        mpesaFields.classList.add('d-none');
+        document.getElementById('{{ form.phone.id }}').removeAttribute('required');
+    }
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set initial active payment method
+    const initialMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    selectPayment(initialMethod);
+});
+</script>
+{% endblock %}  

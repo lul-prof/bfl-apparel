@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Order #{{ order.id }}</h1>
+        <a href="{{ url_for('orders.order_history') }}" class="btn btn-outline-dark">Back to Orders</a>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Order Items</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{{ url_for('static', filename='images/products/' + item.product.image) }}" 
+                                             alt="{{ item.product.name }}" 
+                                             style="width: 50px; height: 50px; object-fit: cover;" 
+                                             class="me-3">
+                                        <div>
+                                            <h6 class="mb-0">{{ item.product.name }}</h6>
+                                            <small class="text-muted">{{ item.product.category }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>KSh {{ "%.2f"|format(item.price) }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>KSh {{ "%.2f"|format(item.price * item.quantity) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Subtotal:</span>
+                            <span>KSh {{ "%.2f"|format(order.total_amount - 200) }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Shipping:</span>
+                            <span>KSh 200.00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between fw-bold">
+                            <span>Total:</span>
+                            <span>KSh {{ "%.2f"|format(order.total_amount) }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5>Order Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Order Date:</strong> {{ order.order_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="badge 
+                            {% if order.status == 'Completed' %}bg-success
+                            {% elif order.status == 'Processing' %}bg-primary
+                            {% elif order.status == 'Cancelled' %}bg-danger
+                            {% else %}bg-secondary{% endif %}">
+                            {{ order.status }}
+                        </span>
+                    </p>
+                    <p><strong>Payment Method:</strong> {{ order.payment_method|title }}</p>
+                    <p><strong>Payment Status:</strong> 
+                        <span class="badge 
+                            {% if order.payment_status == 'Completed' %}bg-success
+                            {% elif order.payment_status == 'Pending' %}bg-warning text-dark
+                            {% else %}bg-secondary{% endif %}">
+                            {{ order.payment_status }}
+                        </span>
+                    </p>
+                    <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
