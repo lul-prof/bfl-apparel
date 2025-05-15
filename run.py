@@ -1,14 +1,9 @@
 import os
-
 import click
 from app import create_app, db
 from app.models import User, Product, Order, Cart
 
 app = create_app()
-
-
-
-
 def initialize_database():
     with app.app_context():
         # Create all tables
@@ -72,9 +67,5 @@ def make_shell_context():
 
 
 if __name__ == '__main__':
-
-    # Clear console for better visibility
-    os.system('cls' if os.name == 'nt' else 'clear')
-    print("🚀 Starting BFL Apparel application...")
     initialize_database()
-    app.run(debug=True)
+    app.run()
